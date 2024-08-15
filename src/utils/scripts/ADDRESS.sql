@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS address (
+  `idAddress` INT NOT NULL AUTO_INCREMENT,
+  `street` VARCHAR(255) NOT NULL,
+  `number` INT NOT NULL,
+  `district` VARCHAR(45) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `city` VARCHAR(45) NOT NULL,
+  `state` VARCHAR(45) NOT NULL,
+  `country` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`idAddress`)
+  )
