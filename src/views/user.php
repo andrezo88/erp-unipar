@@ -1,6 +1,6 @@
 <?php
 
-require '../config/database.php';
+$db = new Database();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $name = trim($_POST['name']);
@@ -10,31 +10,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Validação básica
     if (empty($name) || empty($email) || empty($password)) {
         echo 'Todos os campos são obrigatórios!';
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    } 
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         echo 'E-mail inválido!';
-    } else {
-        $hashedPassword = hash('sha256', $password);
-
-        try {
-            $db = new Database();
-            $conn = $db->connection();
-
-            $query = "INSERT INTO users (name, email, password) VALUES (:name, :email, :password)";
-            $stmt = $conn->prepare($query);
-            $stmt->bindParam(':name', $name);
-            $stmt->bindParam(':email', $email);
-            $stmt->bindParam(':password', $hashedPassword);
-
-            if ($stmt->execute()) {
-                echo 'Usuário cadastrado com sucesso!';
-            } else {
-                echo 'Erro ao cadastrar o usuário!';
-            }
-        } catch (PDOException $e) {
-            echo 'Erro de conexão: ' . $e->getMessage();
-        }
     }
-}
+
+    $hashedPassword = hash('sha256', $password);
+
+    try {
+        $conn = $db->connection();
+
+        $query = "INSERT INTO users (name, email, password) VALUES (:name, :email, :password)";
+        $stmt = $conn->prepare($query);
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':password', $hashedPassword);
+
+        if ($stmt->execute()) {
+            echo 'Usuário cadastrado com sucesso!';
+        } else {
+            echo 'Erro ao cadastrar o usuário!';
+        }
+    } catch (PDOException $e) {
+        echo 'Erro de conexão: ' . $e->getMessage();
+    }
+    }
 ?>
 
 <form method="POST">
